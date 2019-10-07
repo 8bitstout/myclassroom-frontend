@@ -23,7 +23,7 @@ function App() {
   const classes = useStyles();
 
   useEffect(() => {
-    fetch('/api/v1/resource')
+    fetch('/api/v1/resources')
       .then(res => res.json())
       .then(response => {
         console.log(response);
