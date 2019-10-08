@@ -42,7 +42,7 @@ function App() {
           <>
             <ListItem alignItems="flex-start">
               <ListItemAvatar>
-                <Avatar />
+                <Avatar src={course.resources[0].imageUrl}/>
               </ListItemAvatar>
               <ListItemText
                 primary={course.name}
@@ -54,7 +54,9 @@ function App() {
                       className={classes.inline}
                       color="textPrimary"
                     >
-                    Members: {course.members.length}
+                    Members: {course.members.length} <br/>
+                    Resources: {course.resources.length} <br/>
+                    Hours Per Week: {course.hoursPerWeek}
                     </Typography>
                   </React.Fragment>
                 }
