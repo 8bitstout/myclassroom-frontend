@@ -9,6 +9,7 @@ import Avatar from '@material-ui/core/Avatar';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import Typography from '@material-ui/core/Typography';
 import Container from '@material-ui/core/Container';
+import CourseListItem from './Components/CourseListItem';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -20,6 +21,14 @@ const useStyles = makeStyles(theme => ({
     display: 'inline',
   },
 }));
+
+const renderLink = React.useMemo(
+  () =>
+    React.forwardRef((linkProps, ref) => (
+      <Link to={to} {...linkProps} ref={ref} />
+    )),
+    [to],
+);
 
 function App() {
   const [courses, setCourses] = useState([]);
@@ -40,28 +49,7 @@ function App() {
       <List className={classes.root}>
         {courses.map(course => (
           <>
-            <ListItem button alignItems="flex-start">
-              <ListItemAvatar>
-                <Avatar src={course.resources[0].imageUrl}/>
-              </ListItemAvatar>
-              <ListItemText
-                primary={course.name}
-                secondary={
-                  <React.Fragment>
-                    <Typography
-                      component="span"
-                      variant="body2"
-                      className={classes.inline}
-                      color="textPrimary"
-                    >
-                    Members: {course.members.length} <br/>
-                    Resources: {course.resources.length} <br/>
-                    Hours Per Week: {course.hoursPerWeek}
-                    </Typography>
-                  </React.Fragment>
-                }
-              />
-            </ListItem>
+            <CourseListItem course={course} to={`/courses/${course.slug}`} />
             <Divider variant="inset" component="li" />
           </>
         ))}
