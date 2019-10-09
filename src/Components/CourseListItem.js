@@ -25,9 +25,9 @@ function CourseListItem(props) {
   const renderLink = React.useMemo(
     () =>
       React.forwardRef((linkProps, ref) => (
-        <Link to={to} {...linkProps} ref={ref} />
+        <Link to={{ pathname: to, state: course }} {...linkProps} ref={ref} />
       )),
-      [to],
+      [to, course],
   );
 
   return (

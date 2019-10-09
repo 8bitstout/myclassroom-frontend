@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import {
   Switch,
   Route,
@@ -11,12 +11,8 @@ function App() {
   return (
     <Container maxWidth="sm">
       <Switch>
-        <Route path="/courses/:courseSlug">
-          <Course />
-        </Route>
-        <Route path="/">
-          <Home />
-        </Route>
+        <Route path="/courses/:courseSlug" component={Course} />
+        <Route path="/" component={Home} />
       </Switch>
     </Container>
   );
