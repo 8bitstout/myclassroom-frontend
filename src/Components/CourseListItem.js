@@ -7,6 +7,17 @@ import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import { Link } from 'react-router-dom';
 
+const useStyles = makeStyles(theme => ({
+  root: {
+    width: '100%',
+    maxWidth: 360,
+    backgroundColor: theme.palette.background.paper,
+  },
+  inline: {
+    display: 'inline',
+  },
+}));
+
 function CourseListItem(props) {
   const { course, to } = props;
   const classes = useStyles();
@@ -18,17 +29,6 @@ function CourseListItem(props) {
       )),
       [to],
   );
-
-  const useStyles = makeStyles(theme => ({
-    root: {
-      width: '100%',
-      maxWidth: 360,
-      backgroundColor: theme.palette.background.paper,
-    },
-    inline: {
-      display: 'inline',
-    },
-  }));
 
   return (
     <li>
