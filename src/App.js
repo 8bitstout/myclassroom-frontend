@@ -33,14 +33,14 @@ function App() {
         setCourses(response);
       })
       .catch(error => console.log(error));
-  }, [courses]);
+  }, []);
 
   return (
     <Container maxWidth="sm">
       <List className={classes.root}>
         {courses.map(course => (
           <>
-            <ListItem alignItems="flex-start">
+            <ListItem button alignItems="flex-start">
               <ListItemAvatar>
                 <Avatar src={course.resources[0].imageUrl}/>
               </ListItemAvatar>
