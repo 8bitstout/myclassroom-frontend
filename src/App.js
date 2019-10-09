@@ -22,14 +22,6 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-const renderLink = React.useMemo(
-  () =>
-    React.forwardRef((linkProps, ref) => (
-      <Link to={to} {...linkProps} ref={ref} />
-    )),
-    [to],
-);
-
 function App() {
   const [courses, setCourses] = useState([]);
   const classes = useStyles();
