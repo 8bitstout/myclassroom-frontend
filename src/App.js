@@ -4,8 +4,8 @@ import {
   Route,
 } from "react-router-dom";
 import Container from '@material-ui/core/Container';
-import Home from './Pages/Home';
-import Course from './Pages/Course';
+import Home from './Pages/Home.js';
+import Course from './Pages/Course.js';
 
 function App() {
   return (
