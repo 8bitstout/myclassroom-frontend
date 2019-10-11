@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Container from '@material-ui/core/Container';
+import CourseAppBar from '../Components/CourseAppBar'
 
 function Course(props) {
   const { courseSlug } = props.match.params;
@@ -16,8 +17,8 @@ function Course(props) {
   }, []);
 
   return (
-    <Container maxWidth="sm">
-      {course.name}
+    <Container>
+      <CourseAppBar courseImage={Array.isArray(course.resources) ? course.resources[0].imageUrl : ''} title={course.name} />
     </Container>
   );
 }
