@@ -9,7 +9,7 @@ import Course from './Pages/Course.js';
 
 function App() {
   return (
-    <Container maxWidth="sm">
+    <Container maxWidth="lg">
       <Switch>
         <Route path="/courses/:courseSlug" component={Course} />
         <Route path="/" component={Home} />

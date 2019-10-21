@@ -1,16 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import Container from '@material-ui/core/Container';
 import CourseAppBar from '../Components/CourseAppBar'
+import Hero from '../Components/Hero';
 
 function Course(props) {
   const { courseSlug } = props.match.params;
   const [course, setCourse] = useState({});
+  const members = course.members || [];
 
   useEffect(() => {
     fetch(`/api/v1/courses/${courseSlug}`)
       .then(res => res.json())
       .then(response => {
-        console.log(response);
         setCourse(response);
       })
       .catch(error => console.log(error));
@@ -18,7 +19,8 @@ function Course(props) {
 
   return (
     <Container>
-      <CourseAppBar courseImage={Array.isArray(course.resources) ? course.resources[0].imageUrl : ''} title={course.name} />
+      <Hero title={course.name} description={course.description} members={members.length}>
+      </Hero>
     </Container>
   );
 }
