@@ -1,7 +1,19 @@
 import React, { useEffect, useState } from 'react';
 import Container from '@material-ui/core/Container';
-import CourseAppBar from '../Components/CourseAppBar'
 import Hero from '../Components/Hero';
+import { Calendar, momentLocalizer } from 'react-big-calendar';
+import "react-big-calendar/lib/css/react-big-calendar.css";
+import moment from 'moment';
+
+const localizer = momentLocalizer(moment);
+
+const events = [
+  {
+    start: new Date(),
+    end: new Date(moment().add(5, "days")),
+    title: "Some title"
+  }
+];
 
 function Course(props) {
   const { courseSlug } = props.match.params;
@@ -21,6 +33,13 @@ function Course(props) {
     <Container>
       <Hero title={course.name} description={course.description} members={members.length} slug={course.slug}>
       </Hero>
+      <Calendar
+        localizer={localizer}
+        events={events}
+        style={{ height: "100vh" }}
+        defaultDate={new Date()}
+        defaultView="month"
+      />
     </Container>
   );
 }

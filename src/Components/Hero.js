@@ -63,10 +63,10 @@ export default function Hero(props) {
       </HeroTitle>
       <HeroDescription>
         <Breadcrumbs aria-label="breadcrumb">
-          <Link color="inherit" href="/" onClick={handleClick}>
+          <Link color="inherit" href="/">
             home
           </Link>
-          <Link color="inherit" href="/getting-started/installation/" onClick={handleClick}>
+          <Link color="inherit" href="/courses">
             courses
           </Link>
           <Typography color="textPrimary">{props.slug}</Typography>
