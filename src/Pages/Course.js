@@ -19,7 +19,7 @@ function Course(props) {
 
   return (
     <Container>
-      <Hero title={course.name} description={course.description} members={members.length}>
+      <Hero title={course.name} description={course.description} members={members.length} slug={course.slug}>
       </Hero>
     </Container>
   );

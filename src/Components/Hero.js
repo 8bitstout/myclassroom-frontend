@@ -1,16 +1,16 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import GroupIcon from '@material-ui/icons/Group';
 import ScheduleIcon from '@material-ui/icons/Schedule';
+import Breadcrumbs from '@material-ui/core/Breadcrumbs';
 import Badge from '@material-ui/core/Badge';
 import Button from '@material-ui/core/Button';
+import AddIcon from '@material-ui/icons/Add';
 import CallSplitIcon from '@material-ui/icons/CallSplit';
 import ShareIcon from '@material-ui/icons/Share';
+import Link from '@material-ui/core/Link';
 import styled from 'styled-components';
 
 const HeroContainer = styled.div`
@@ -19,7 +19,6 @@ const HeroContainer = styled.div`
   background-color: #e9ecef;
   border-radius: .3rem;
 `
-
 const HeroTitle = styled.h1`
   font-size: 3.5rem;
   font-weight: 300;
@@ -48,6 +47,11 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
+function handleClick(event) {
+  event.preventDefault();
+  alert('You clicked a breadcrumb.');
+}
+
 export default function Hero(props) {
   const classes = useStyles();
   const toolbarStyle = { backgroundImage: props.courseImage }
@@ -58,7 +62,18 @@ export default function Hero(props) {
         {props.title}
       </HeroTitle>
       <HeroDescription>
-        {props.description}
+        <Breadcrumbs aria-label="breadcrumb">
+          <Link color="inherit" href="/" onClick={handleClick}>
+            home
+          </Link>
+          <Link color="inherit" href="/getting-started/installation/" onClick={handleClick}>
+            courses
+          </Link>
+          <Typography color="textPrimary">{props.slug}</Typography>
+        </Breadcrumbs>
+        <p>
+          {props.description}
+        </p>
       </HeroDescription>
       <hr style={{ marginBottom: '1.5rem', marginTop: '1.5rem'}} />
       <HeroContent>
@@ -73,9 +88,17 @@ export default function Hero(props) {
         variant="contained"
         color="primary"
         className={classes.button}
+        startIcon={<AddIcon />}
+      >
+        Join
+      </Button>
+      <Button
+        variant="contained"
+        color="primary"
+        className={classes.button}
         startIcon={<ShareIcon />}
       >
-        Share Course
+        Share
       </Button>
     </HeroContainer>
   );
