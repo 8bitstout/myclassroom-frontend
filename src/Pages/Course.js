@@ -20,6 +20,11 @@ function Course(props) {
   const [course, setCourse] = useState({});
   const members = course.members || [];
 
+  const onSelectSlot = slot => {
+    console.log(slot);
+    alert('Selected slot!')
+  }
+
   useEffect(() => {
     fetch(`/api/v1/courses/${courseSlug}`)
       .then(res => res.json())
@@ -39,6 +44,8 @@ function Course(props) {
         style={{ height: "100vh" }}
         defaultDate={new Date()}
         defaultView="month"
+        selectable
+        onSelectSlot={onSelectSlot}
       />
     </Container>
   );
