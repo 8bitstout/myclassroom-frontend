@@ -99,9 +99,9 @@ function Course(props) {
         onClose={handleClose}
       >
         <div style={modalStyle} className={classes.paper}>
-          <h2 id="simple-modal-title">Text in a modal</h2>
+          <h2 id="simple-modal-title">Course Resources</h2>
           <p id="simple-modal-description">
-            <Resources />
+            <Resources courseId={course.id}/>
           </p>
         </div>
       </Modal>

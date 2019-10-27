@@ -11,19 +11,17 @@ import Grid from '@material-ui/core/Grid';
 
 const useStyles = makeStyles({
   card: {
-    maxWidth: 345,
   },
   media: {
-    height: 400
   },
 });
 
-function Resources() {
+function Resources(props) {
   const [resources, setResources] = useState([]);
   const classes = useStyles();
 
   useEffect(() => {
-    fetch('/api/v1/resources')
+    fetch(`/api/v1/courses/${props.courseId}/resources`)
       .then(res => res.json())
       .then(response => {
         console.log(response);
@@ -33,7 +31,7 @@ function Resources() {
   }, [resources]);
 
   return (
-    <Grid container spacing={24}>>
+    <Grid container spacing={24} style={{width: '100%'}}>
       {resources.map(({ name, author, imageUrl, url }) => (
         <Grid item md={3}>
           <Card className={classes.card}>
