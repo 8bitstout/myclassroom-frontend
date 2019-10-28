@@ -28,7 +28,7 @@ function Resources(props) {
         setResources(response);
       })
       .catch(error => console.log(error));
-  }, [resources]);
+  }, []);
 
   return (
     <Grid container spacing={24} style={{width: '100%'}}>

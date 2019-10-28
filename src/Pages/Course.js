@@ -1,8 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import Container from '@material-ui/core/Container';
 import Hero from '../Components/Hero';
-import Modal from '@material-ui/core/Modal';
-import Resources from './Resources';
+import Button from '@material-ui/core/Button';
+import Avatar from '@material-ui/core/Avatar';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemAvatar from '@material-ui/core/ListItemAvatar';
+import ListItemText from '@material-ui/core/ListItemText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import Dialog from '@material-ui/core/Dialog';
+import PersonIcon from '@material-ui/icons/Person';
+import AddIcon from '@material-ui/icons/Add';
+import { blue } from '@material-ui/core/colors';
 import { makeStyles } from '@material-ui/core/styles';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import "react-big-calendar/lib/css/react-big-calendar.css";
@@ -18,21 +27,6 @@ const events = [
   }
 ];
 
-function rand() {
-  return Math.round(Math.random() * 20) - 10;
-}
-
-function getModalStyle(x, y) {
-  const top = y //50 + rand();
-  const left = x //50 + rand();
-
-  return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`,
-  };
-}
-
 const useStyles = makeStyles(theme => ({
   paper: {
     position: 'absolute',
@@ -46,37 +40,103 @@ const useStyles = makeStyles(theme => ({
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3),
   },
+  avatar: {
+    backgroundColor: blue[100],
+    color: blue[600],
+  },
 }));
+
+function ResourceDialog(props) {
+  const classes = useStyles();
+  const { onClose, selectedValue, open, resources, selectedDate } = props;
+
+  const handleClose = () => {
+    onClose(selectedValue);
+  };
+
+  const handleListItemClick = value => {
+    console.log(value);
+    events.push({
+      start: new Date(selectedDate),
+      end: new Date(selectedDate),
+      title: value
+    });
+    onClose(value);
+  }
+
+  return (
+    <Dialog onClose={handleClose} aria-labelledby="simple-dialog-title" open={open}>
+      <DialogTitle id="simple-dialog-title">Select a course to study on {selectedDate}</DialogTitle>
+      <List>
+        {resources.map(resource => (
+          <ListItem button onClick={() => handleListItemClick(resource.name)} key={resource.id}>
+            <ListItemAvatar>
+              <Avatar className={classes.avatar} src={resource.imageUrl}>
+                A
+              </Avatar>
+            </ListItemAvatar>
+            <ListItemText primary={resource.name} />
+          </ListItem>
+        ))}
+
+        <ListItem button onClick={() => handleListItemClick('addAccount')}>
+          <ListItemAvatar>
+            <Avatar>
+              <AddIcon />
+            </Avatar>
+          </ListItemAvatar>
+          <ListItemText primary="add account" />
+        </ListItem>
+      </List>
+    </Dialog>
+  )
+}
 
 function Course(props) {
   const { courseSlug } = props.match.params;
   const [course, setCourse] = useState({});
+  const [resources, setResources] = useState([]);
+  const [selectedDate, setSelectedDate] = useState('');
   const members = course.members || [];
-  const classes = useStyles();
-  // getModalStyle is not a pure function, we roll the style only on the first render
-  const [modalStyle, setModalStyle] = React.useState(getModalStyle);
   const [open, setOpen] = React.useState(false);
+  const [selectedValue, setSelectedValue] = React.useState(null);
 
   const handleOpen = () => {
     setOpen(true);
   };
 
-  const handleClose = () => {
+  const handleClose = value => {
     setOpen(false);
+    setSelectedValue(value);
   };
 
   const onSelectSlot = slot => {
     console.log(slot);
+    const [selectedDate] = slot.slots;
+    setSelectedDate(new Date(selectedDate).toLocaleDateString());
     handleOpen();
   }
 
   useEffect(() => {
-    fetch(`/api/v1/courses/${courseSlug}`)
-      .then(res => res.json())
-      .then(response => {
-        setCourse(response);
-      })
-      .catch(error => console.log(error));
+    const fetchCourse = async () => {
+      let courseId;
+      await fetch(`/api/v1/courses/${courseSlug}`)
+        .then(res => res.json())
+        .then(response => {
+          courseId = response.id;
+          setCourse(response);
+        })
+        .catch(error => console.log(error));
+      await fetch(`/api/v1/courses/${courseId}/resources`)
+        .then(res => res.json())
+        .then(response => {
+          console.log(course.id);
+          console.log(response);
+          setResources(response);
+        })
+        .catch(error => console.log(error));
+    }
+    fetchCourse();
   }, []);
 
   return (
@@ -92,19 +152,13 @@ function Course(props) {
         selectable
         onSelectSlot={onSelectSlot}
       />
-      <Modal
-        aria-labelledby="simple-modal-title"
-        aria-describedby="simple-modal-description"
+      <ResourceDialog
+        resources={resources}
+        selectedDate={selectedDate}
+        selectedValue={selectedValue}
         open={open}
         onClose={handleClose}
-      >
-        <div style={modalStyle} className={classes.paper}>
-          <h2 id="simple-modal-title">Course Resources</h2>
-          <p id="simple-modal-description">
-            <Resources courseId={course.id}/>
-          </p>
-        </div>
-      </Modal>
+      />
     </Container>
   );
 }
