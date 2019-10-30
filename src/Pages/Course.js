@@ -97,6 +97,7 @@ function Course(props) {
   const [course, setCourse] = useState({});
   const [resources, setResources] = useState([]);
   const [selectedDate, setSelectedDate] = useState('');
+  const [courseEvents, setCourseEvents] = useState([]);
   const members = course.members || [];
   const [open, setOpen] = React.useState(false);
   const [selectedValue, setSelectedValue] = React.useState(null);
@@ -130,9 +131,17 @@ function Course(props) {
       await fetch(`/api/v1/courses/${courseId}/resources`)
         .then(res => res.json())
         .then(response => {
-          console.log(course.id);
-          console.log(response);
+          let dates = []
           setResources(response);
+          response.forEach(resource => {
+            const { daysOfWeek } = resource;
+            dates = dates.concat(daysOfWeek.map(day => ({
+              start: new Date(new Date().setDate(day)),
+              end: new Date(new Date().setDate(day)),
+              title: resource.name
+            })));
+          });
+          setCourseEvents(dates);
         })
         .catch(error => console.log(error));
     }
@@ -145,7 +154,7 @@ function Course(props) {
       </Hero>
       <Calendar
         localizer={localizer}
-        events={events}
+        events={courseEvents}
         style={{ height: "100vh" }}
         defaultDate={new Date()}
         defaultView="month"
