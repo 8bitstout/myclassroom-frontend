@@ -48,7 +48,7 @@ const useStyles = makeStyles(theme => ({
 
 function ResourceDialog(props) {
   const classes = useStyles();
-  const { onClose, selectedValue, open, resources, selectedDate } = props;
+  const { onClose, selectedValue, open, resources, selectedDate, addEvent } = props;
 
   const handleClose = () => {
     onClose(selectedValue);
@@ -56,11 +56,7 @@ function ResourceDialog(props) {
 
   const handleListItemClick = value => {
     console.log(value);
-    events.push({
-      start: new Date(selectedDate),
-      end: new Date(selectedDate),
-      title: value
-    });
+    addEvent(selectedDate, value);
     onClose(value);
   }
 
@@ -118,6 +114,13 @@ function Course(props) {
     handleOpen();
   }
 
+  const addEvent = events => (date, name) =>
+    events.concat([{
+      start: new Date(date),
+      end: new Date(date),
+      title: name
+    }])
+
   useEffect(() => {
     const fetchCourse = async () => {
       let courseId;
@@ -167,6 +170,7 @@ function Course(props) {
         selectedValue={selectedValue}
         open={open}
         onClose={handleClose}
+        addEvent={(date, name) => setCourseEvents(addEvent(courseEvents)(date,name))}
       />
     </Container>
   );
