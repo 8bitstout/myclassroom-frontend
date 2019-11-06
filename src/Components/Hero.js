@@ -89,6 +89,7 @@ export default function Hero(props) {
         color="primary"
         className={classes.button}
         startIcon={<AddIcon />}
+        onClick={() => window.open('http://localhost:3030/GoogleLogin', '_blank')}
       >
         Join
       </Button>

@@ -19,14 +19,6 @@ import moment from 'moment';
 
 const localizer = momentLocalizer(moment);
 
-const events = [
-  {
-    start: new Date(),
-    end: new Date(moment().add(5, "days")),
-    title: "Some title"
-  }
-];
-
 const useStyles = makeStyles(theme => ({
   paper: {
     position: 'absolute',
@@ -122,6 +114,21 @@ function Course(props) {
     }])
 
   useEffect(() => {
+    let socket = new WebSocket("ws://127.0.0.1:3030/ws");
+    socket.onopen = (e) => {
+      console.log("Successfully Connected");
+      console.log(e);
+      socket.send("Hi From the Client!")
+    };
+    
+    socket.onclose = event => {
+        console.log("Socket Closed Connection: ", event);
+        socket.send("Client Closed!")
+    };
+
+    socket.onerror = error => {
+        console.log("Socket Error: ", error);
+    };
     const fetchCourse = async () => {
       let courseId;
       await fetch(`/api/v1/courses/${courseSlug}`)
