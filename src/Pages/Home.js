@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-function Home() {
+function Home(props) {
   const [courses, setCourses] = useState([]);
   const classes = useStyles();
 
@@ -40,6 +40,7 @@ function Home() {
           </>
         ))}
       </List>
+      <button onClick={props.auth.login}>Login</button>
     </Container>
   );
 }
