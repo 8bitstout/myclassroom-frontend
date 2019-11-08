@@ -18,6 +18,7 @@ const useStyles = makeStyles(theme => ({
 
 function Home(props) {
   const [courses, setCourses] = useState([]);
+  const { isAuthenticated ,login } = props.auth;
   const classes = useStyles();
 
   useEffect(() => {
@@ -32,15 +33,18 @@ function Home(props) {
 
   return (
     <Container maxWidth="sm">
-      <List className={classes.root}>
-        {courses.map(course => (
-          <>
-            <CourseListItem course={course} to={`/courses/${course.slug}`} />
-            <Divider variant="inset" component="li" />
-          </>
-        ))}
-      </List>
-      <button onClick={props.auth.login}>Login</button>
+      {isAuthenticated() ? (
+        <List className={classes.root}>
+          {courses.map(course => (
+            <>
+              <CourseListItem course={course} to={`/courses/${course.slug}`} />
+              <Divider variant="inset" component="li" />
+            </>
+          ))}
+        </List>
+      ) : (
+        <button onClick={props.auth.login}>Login</button>
+      )}
     </Container>
   );
 }

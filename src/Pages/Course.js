@@ -16,8 +16,24 @@ import { makeStyles } from '@material-ui/core/styles';
 import { Calendar, momentLocalizer } from 'react-big-calendar';
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import moment from 'moment';
+import RecurrencePattern from '../Calendar/RecurrencePattern.js';
 
 const localizer = momentLocalizer(moment);
+
+const genEvents = parsedRules => {
+  const constants = require('../Calendar/constants.js');
+  const { byday, frequency } = parsedRules;
+  const firstCalDate = moment().day(byday).format();
+  if (frequency === constants.default.rules.FREQ.WEEKLY) {
+    const monthEvents = [firstCalDate];
+    for (let i=0; i < 4; i+=1) {
+      monthEvents.push(moment(monthEvents[i]).day(9).format());
+    }
+    return monthEvents;
+  } else {
+    return [firstCalDate];
+  }
+}
 
 const useStyles = makeStyles(theme => ({
   paper: {
@@ -112,6 +128,33 @@ function Course(props) {
       end: new Date(date),
       title: name
     }])
+    
+  const responseGoogle = response => {
+    console.log(response);
+    if (response.accessToken) {
+      const { accessToken } = response;
+      fetch(`https://www.googleapis.com/calendar/v3/calendars/${process.env.REACT_APP_GMAIL}/events`, { headers: { Authorization: `Bearer ${accessToken} `} })
+        .then(response => response.json())
+        .then(response => {
+          console.log(response);
+          if (response.items) {
+            const [firstEvent] = response.items;
+            if (firstEvent.recurrence) {
+              const [eventRule] = firstEvent.recurrence; 
+              const rpattern = new RecurrencePattern(eventRule);
+              const rules = rpattern.parse();
+              const eventDates = genEvents(rules).map(eventDate => ({
+                start: eventDate,
+                end: eventDate,
+                title: firstEvent.summary
+              }));
+              console.log(eventDates);
+              setCourseEvents([...courseEvents, ...eventDates]);
+            }
+          }
+        });
+    }
+  }
 
   useEffect(() => {
     let socket = new WebSocket("ws://127.0.0.1:3030/ws");
@@ -129,6 +172,7 @@ function Course(props) {
     socket.onerror = error => {
         console.log("Socket Error: ", error);
     };
+
     const fetchCourse = async () => {
       let courseId;
       await fetch(`/api/v1/courses/${courseSlug}`)
@@ -160,7 +204,7 @@ function Course(props) {
 
   return (
     <Container>
-      <Hero title={course.name} description={course.description} members={members.length} slug={course.slug}>
+      <Hero title={course.name} description={course.description} members={members.length} slug={course.slug} responseGoogle={responseGoogle}>
       </Hero>
       <Calendar
         localizer={localizer}

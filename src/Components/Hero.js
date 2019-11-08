@@ -12,6 +12,7 @@ import CallSplitIcon from '@material-ui/icons/CallSplit';
 import ShareIcon from '@material-ui/icons/Share';
 import Link from '@material-ui/core/Link';
 import styled from 'styled-components';
+import { GoogleLogin } from 'react-google-login';
 
 const HeroContainer = styled.div`
   padding: 4rem 2rem;
@@ -55,6 +56,7 @@ function handleClick(event) {
 export default function Hero(props) {
   const classes = useStyles();
   const toolbarStyle = { backgroundImage: props.courseImage }
+  const { responseGoogle } = props;
 
   return (
     <HeroContainer>
@@ -101,6 +103,13 @@ export default function Hero(props) {
       >
         Share
       </Button>
+      <GoogleLogin
+        clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+        buttonText='Sync Calendar'
+        onSuccess={responseGoogle}
+        onFailure={responseGoogle}
+        cookiePolicy={'single_host_origin'}
+      />
     </HeroContainer>
   );
 }
